@@ -17,7 +17,7 @@ const articleSchema = { title: String, content: String };
 const Article = mongoose.model("Article", articleSchema);
 
 
-////////////// general
+/////////////////////////////////////////
 app.route("/articles")
 
     .get((req, res) => {
@@ -37,17 +37,25 @@ app.route("/articles")
             content: req.body.content
         });
 
+        // newArticle.save().then(response=>{
+        //     res.send(response);
+        // }):
+
         newArticle.save((err) => {
             if (!err)
-                res.send("Success!!!");
+                res.send("Saved!!!");
         });
     })
 
     .delete((req, res) => {
 
+        // Article.deleteMany().then(()=>{
+        //     res.send("Deleted!!!");
+        // });
+
         Article.deleteMany((err) => {
             if (!err)
-                res.send("success");
+                res.send("Deleted!!!");
             else
                 res.send(err);
         });
@@ -59,6 +67,12 @@ app.route("/articles/:articleTitle")
 
     .get((req, res) => {
 
+        // Article.findOne({ title: req.params.articleTitle }).then((response) => {
+        //     res.send(response);
+        // }).catch(() => {
+        //     res.status(400).send();
+        // });
+
         Article.findOne({ title: req.params.articleTitle }, (err, foundArticle) => {
             if (foundArticle)
                 res.send(foundArticle);
@@ -69,6 +83,19 @@ app.route("/articles/:articleTitle")
 
     })
     .put((req, res) => {
+
+        // Article.update(
+        //     { title: req.params.articleTitle },
+        //     { title: req.body.title, content: req.body.content },
+        //     )
+        //     .then(() => {
+        //         res.status(200).send();
+        //     })
+        //     .catch(() => {
+        //         res.status(400).send();
+        //     });
+
+        // overwrite:true change all values. If you change only title, no need to use this method.
         Article.update(
             { title: req.params.articleTitle },
             { title: req.body.title, content: req.body.content },
@@ -91,18 +118,28 @@ app.route("/articles/:articleTitle")
             }
         );
     })
-    .delete((req,res)=>{
+    .delete((req, res) => {
+
+        // Article.findOneAndDelete({ title: req.params.articleTitle })
+        //     .then(() => {
+        //         res.send();
+        //     }).catch(() => {
+        //         res.status(400).send();
+        //     });
+
         Article.deleteOne(
-            {title:req.params.articleTitle},
-            (err)=>{
-                if(!err)
-                res.send("successs....");
+            { title: req.params.articleTitle },
+            (err) => {
+                if (!err)
+                    res.send("successs....");
                 else
-                res.send(err);
+                    res.send(err);
             }
         );
     });
 
+
+////////////////////////
 let port = process.env.PORT;
 if (port == null || port == "") {
     port = 3000;
